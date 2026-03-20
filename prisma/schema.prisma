@@ -1,0 +1,201 @@
+generator client {
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  extensions = [vector]
+}
+
+// ─── Multi-Tenant Foundation ─────────────────────────────────────────────────
+
+model Workspace {
+  id           String   @id @default(cuid())
+  name         String
+  slug         String   @unique
+  brandColor   String   @default("#2563eb") @map("brand_color")
+  supportEmail String   @map("support_email")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  agents        Agent[]
+  tickets       Ticket[]
+  cannedReplies CannedReply[]
+  kbCategories  KbCategory[]
+  kbArticles    KbArticle[]
+
+  @@map("workspaces")
+}
+
+// ─── Agents (Staff Users) ────────────────────────────────────────────────────
+
+enum AgentRole {
+  ADMIN
+  AGENT
+}
+
+model Agent {
+  id           String    @id @default(cuid())
+  workspaceId  String    @map("workspace_id")
+  name         String
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  role         AgentRole @default(AGENT)
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  workspace     Workspace     @relation(fields: [workspaceId], references: [id])
+  assignedTickets Ticket[]    @relation("AssignedAgent")
+  messages      Message[]
+  cannedReplies CannedReply[]
+
+  @@index([workspaceId])
+  @@map("agents")
+}
+
+// ─── Tickets ─────────────────────────────────────────────────────────────────
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_ON_CUSTOMER
+  RESOLVED
+  CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+model Ticket {
+  id              String         @id @default(cuid())
+  workspaceId     String         @map("workspace_id")
+  subject         String
+  status          TicketStatus   @default(OPEN)
+  priority        TicketPriority @default(NORMAL)
+  category        String?
+  submitterName   String         @map("submitter_name")
+  submitterEmail  String         @map("submitter_email")
+  lookupToken     String         @unique @default(cuid()) @map("lookup_token")
+  assignedAgentId String?        @map("assigned_agent_id")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+  resolvedAt      DateTime?      @map("resolved_at")
+
+  workspace     Workspace @relation(fields: [workspaceId], references: [id])
+  assignedAgent Agent?    @relation("AssignedAgent", fields: [assignedAgentId], references: [id])
+  messages      Message[]
+
+  @@index([workspaceId, status])
+  @@index([workspaceId, assignedAgentId])
+  @@index([submitterEmail])
+  @@map("tickets")
+}
+
+// ─── Messages (Conversation Thread) ──────────────────────────────────────────
+
+enum SenderType {
+  USER
+  AGENT
+  SYSTEM
+}
+
+model Message {
+  id             String     @id @default(cuid())
+  ticketId       String     @map("ticket_id")
+  body           String
+  senderType     SenderType @map("sender_type")
+  agentId        String?    @map("agent_id")
+  isInternalNote Boolean    @default(false) @map("is_internal_note")
+  createdAt      DateTime   @default(now()) @map("created_at")
+
+  ticket      Ticket       @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  agent       Agent?       @relation(fields: [agentId], references: [id])
+  attachments Attachment[]
+
+  @@index([ticketId, createdAt])
+  @@map("messages")
+}
+
+// ─── Attachments ─────────────────────────────────────────────────────────────
+
+model Attachment {
+  id        String @id @default(cuid())
+  messageId String @map("message_id")
+  fileName  String @map("file_name")
+  fileUrl   String @map("file_url")
+  fileSize  Int    @map("file_size")
+  mimeType  String @map("mime_type")
+
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@map("attachments")
+}
+
+// ─── Canned Replies ──────────────────────────────────────────────────────────
+
+model CannedReply {
+  id               String @id @default(cuid())
+  workspaceId      String @map("workspace_id")
+  title            String
+  body             String
+  createdByAgentId String @map("created_by_agent_id")
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id])
+  agent     Agent     @relation(fields: [createdByAgentId], references: [id])
+
+  @@index([workspaceId])
+  @@map("canned_replies")
+}
+
+// ─── Knowledge Base Categories ───────────────────────────────────────────────
+
+model KbCategory {
+  id               String  @id @default(cuid())
+  workspaceId      String  @map("workspace_id")
+  name             String
+  slug             String
+  parentCategoryId String? @map("parent_category_id")
+  sortOrder        Int     @default(0) @map("sort_order")
+
+  workspace Workspace    @relation(fields: [workspaceId], references: [id])
+  parent    KbCategory?  @relation("CategoryTree", fields: [parentCategoryId], references: [id])
+  children  KbCategory[] @relation("CategoryTree")
+  articles  KbArticle[]
+
+  @@unique([workspaceId, slug])
+  @@index([workspaceId, sortOrder])
+  @@map("kb_categories")
+}
+
+// ─── Knowledge Base Articles ─────────────────────────────────────────────────
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model KbArticle {
+  id              String                       @id @default(cuid())
+  workspaceId     String                       @map("workspace_id")
+  categoryId      String?                      @map("category_id")
+  title           String
+  slug            String
+  bodyHtml        String                       @map("body_html")
+  status          ArticleStatus                @default(DRAFT)
+  helpfulCount    Int                          @default(0) @map("helpful_count")
+  notHelpfulCount Int                          @default(0) @map("not_helpful_count")
+  embedding       Unsupported("vector(1536)")?
+  createdAt       DateTime                     @default(now()) @map("created_at")
+  updatedAt       DateTime                     @updatedAt @map("updated_at")
+
+  workspace Workspace   @relation(fields: [workspaceId], references: [id])
+  category  KbCategory? @relation(fields: [categoryId], references: [id])
+
+  @@unique([workspaceId, slug])
+  @@index([workspaceId, status])
+  @@map("kb_articles")
+}

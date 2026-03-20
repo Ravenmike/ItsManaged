@@ -1,0 +1,18 @@
+services:
+  app:
+    image: ghcr.io/${GITHUB_REPO:-ravenmike/itsmanaged}:latest
+    build: !override
+    environment:
+      NODE_ENV: production
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "1.0"
+
+  db:
+    ports: !override []
+    deploy:
+      resources:
+        limits:
+          memory: 512M
