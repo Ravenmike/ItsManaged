@@ -24,3 +24,16 @@ export const TICKET_CATEGORIES = [
 ] as const;
 
 export type TicketCategory = (typeof TICKET_CATEGORIES)[number];
+
+export const ALLOWED_FILE_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "application/pdf",
+  "text/plain",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
+
+export const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
