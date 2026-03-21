@@ -1,7 +1,34 @@
 import { requireAuth } from "@/lib/auth-guard";
+import { db } from "@/lib/db";
 
 export default async function DashboardHome() {
   const session = await requireAuth();
+  const wid = session.user.workspaceId;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const [openCount, waitingCount, resolvedToday, kbCount] = await Promise.all([
+    db.ticket.count({
+      where: { workspaceId: wid, status: "OPEN" },
+    }),
+    db.ticket.count({
+      where: { workspaceId: wid, status: "WAITING_ON_CUSTOMER" },
+    }),
+    db.ticket.count({
+      where: { workspaceId: wid, resolvedAt: { gte: today } },
+    }),
+    db.kbArticle.count({
+      where: { workspaceId: wid, status: "PUBLISHED" },
+    }),
+  ]);
+
+  const stats = [
+    { label: "Open Tickets", value: openCount },
+    { label: "Awaiting Response", value: waitingCount },
+    { label: "Resolved Today", value: resolvedToday },
+    { label: "KB Articles", value: kbCount },
+  ];
 
   return (
     <div>
@@ -11,12 +38,7 @@ export default async function DashboardHome() {
       </p>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {[
-          { label: "Open Tickets", value: "—" },
-          { label: "Awaiting Response", value: "—" },
-          { label: "Resolved Today", value: "—" },
-          { label: "KB Articles", value: "—" },
-        ].map((stat) => (
+        {stats.map((stat) => (
           <div
             key={stat.label}
             className="rounded-lg border border-gray-200 bg-white p-6"
