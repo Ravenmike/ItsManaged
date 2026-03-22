@@ -24,7 +24,8 @@ export async function sendTicketConfirmation(ticket: TicketEmailData) {
   await resend.emails.send({
     from: getFromEmail(),
     to: ticket.submitterEmail,
-    subject: `We received your request: ${ticket.subject}`,
+    replyTo: "support@earnyourears.app",
+    subject: `We received your request: ${ticket.subject} [#${ticket.lookupToken}]`,
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #1f2937;">We got your message</h2>
@@ -54,7 +55,8 @@ export async function sendAgentReplyNotification(ticket: TicketEmailData, replyB
   await resend.emails.send({
     from: getFromEmail(),
     to: ticket.submitterEmail,
-    subject: `Re: ${ticket.subject}`,
+    replyTo: "support@earnyourears.app",
+    subject: `Re: ${ticket.subject} [#${ticket.lookupToken}]`,
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #1f2937;">New reply to your request</h2>
@@ -80,7 +82,8 @@ export async function sendTicketStatusUpdate(ticket: TicketEmailData, newStatus:
   await resend.emails.send({
     from: getFromEmail(),
     to: ticket.submitterEmail,
-    subject: `Status update: ${ticket.subject}`,
+    replyTo: "support@earnyourears.app",
+    subject: `Status update: ${ticket.subject} [#${ticket.lookupToken}]`,
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #1f2937;">Your request has been updated</h2>

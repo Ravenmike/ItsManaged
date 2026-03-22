@@ -8,6 +8,7 @@ import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { FileUpload, type UploadedFile } from "@/components/ui/file-upload";
+import { KbSuggestions, KbSuggestionsDisplay } from "@/components/tickets/kb-suggestions";
 import { TICKET_CATEGORIES } from "@/lib/constants";
 
 const categoryOptions = TICKET_CATEGORIES.map((c) => ({
@@ -20,6 +21,8 @@ export default function NewTicketPage() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [attachments, setAttachments] = useState<UploadedFile[]>([]);
+  const [description, setDescription] = useState("");
+  const { suggestions, handleQueryChange } = KbSuggestions();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -94,7 +97,14 @@ export default function NewTicketPage() {
           placeholder="Please describe your issue in detail..."
           rows={6}
           required
+          value={description}
+          onChange={(e) => {
+            setDescription(e.target.value);
+            handleQueryChange(e.target.value);
+          }}
         />
+
+        <KbSuggestionsDisplay suggestions={suggestions} />
 
         <FileUpload onFilesUploaded={setAttachments} />
 

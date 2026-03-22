@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { KbSearch } from "@/components/kb/kb-search";
 
 export default function PortalHome() {
   return (
@@ -11,11 +12,7 @@ export default function PortalHome() {
       </p>
 
       <div className="mt-8">
-        <input
-          type="search"
-          placeholder="Search for help articles..."
-          className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base shadow-sm placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-        />
+        <KbSearch />
       </div>
 
       <div className="mt-12 grid gap-6 sm:grid-cols-2">
