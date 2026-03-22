@@ -2,16 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 
 // Resend inbound email webhook handler
+// Payload format: { type: "email.received", data: { from, subject, to, text, html, ... } }
 export async function POST(request: NextRequest) {
   try {
     const payload = await request.json();
 
-    const {
-      from: senderEmail,
-      subject,
-      text: bodyText,
-      html: bodyHtml,
-    } = payload;
+    // Resend wraps inbound email data in a `data` object
+    const emailData = payload.data || payload;
+
+    const senderEmail = emailData.from;
+    const subject = emailData.subject;
+    const bodyText = emailData.text;
+    const bodyHtml = emailData.html;
 
     if (!senderEmail || !subject) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -25,12 +27,10 @@ export async function POST(request: NextRequest) {
     // Check for ticket token in subject line: [#TOKEN]
     const tokenMatch = subject.match(/\[#([a-z0-9]+)\]/i);
 
-    // Use plain text body, fall back to stripping HTML
-    const body = bodyText || (bodyHtml ? bodyHtml.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
-
-    if (!body) {
-      return NextResponse.json({ error: "Empty message body" }, { status: 400 });
-    }
+    // Use plain text body, fall back to stripping HTML, fall back to subject
+    const body = bodyText
+      || (bodyHtml ? bodyHtml.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "")
+      || subject;
 
     const workspace = await db.workspace.findFirst();
     if (!workspace) {
