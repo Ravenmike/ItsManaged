@@ -40,6 +40,10 @@ export async function addAgentReply(ticketId: string, body: string, isInternalNo
 
   // Send email notification for public replies only
   if (!isInternalNote) {
+    const workspace = await db.workspace.findUnique({
+      where: { id: ticket.workspaceId },
+    });
+
     try {
       await sendAgentReplyNotification(
         {
@@ -47,6 +51,8 @@ export async function addAgentReply(ticketId: string, body: string, isInternalNo
           submitterEmail: ticket.submitterEmail,
           subject: ticket.subject,
           lookupToken: ticket.lookupToken,
+          workspaceName: workspace?.name ?? "Support",
+          supportEmail: workspace?.supportEmail ?? "support@earnyourears.app",
         },
         body.trim(),
       );

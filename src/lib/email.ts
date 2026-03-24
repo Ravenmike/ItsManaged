@@ -7,24 +7,25 @@ interface TicketEmailData {
   submitterEmail: string;
   subject: string;
   lookupToken: string;
-  workspaceName?: string;
+  workspaceName: string;
+  supportEmail: string;
 }
 
 function getBaseUrl() {
   return process.env.NEXTAUTH_URL || "https://itsmanaged.app";
 }
 
-function getFromEmail() {
-  return "EarnYourEars Support <support@earnyourears.app>";
+function getFromEmail(data: TicketEmailData) {
+  return `${data.workspaceName} <${data.supportEmail}>`;
 }
 
 export async function sendTicketConfirmation(ticket: TicketEmailData) {
   const trackingUrl = `${getBaseUrl()}/portal/tickets/${ticket.lookupToken}`;
 
   await resend.emails.send({
-    from: getFromEmail(),
+    from: getFromEmail(ticket),
     to: ticket.submitterEmail,
-    replyTo: "support@earnyourears.app",
+    replyTo: ticket.supportEmail,
     subject: `We received your request: ${ticket.subject} [#${ticket.lookupToken}]`,
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
@@ -53,9 +54,9 @@ export async function sendAgentReplyNotification(ticket: TicketEmailData, replyB
   const trackingUrl = `${getBaseUrl()}/portal/tickets/${ticket.lookupToken}`;
 
   await resend.emails.send({
-    from: getFromEmail(),
+    from: getFromEmail(ticket),
     to: ticket.submitterEmail,
-    replyTo: "support@earnyourears.app",
+    replyTo: ticket.supportEmail,
     subject: `Re: ${ticket.subject} [#${ticket.lookupToken}]`,
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
@@ -80,9 +81,9 @@ export async function sendTicketStatusUpdate(ticket: TicketEmailData, newStatus:
   const trackingUrl = `${getBaseUrl()}/portal/tickets/${ticket.lookupToken}`;
 
   await resend.emails.send({
-    from: getFromEmail(),
+    from: getFromEmail(ticket),
     to: ticket.submitterEmail,
-    replyTo: "support@earnyourears.app",
+    replyTo: ticket.supportEmail,
     subject: `Status update: ${ticket.subject} [#${ticket.lookupToken}]`,
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">

@@ -49,9 +49,22 @@ export function ArticleFeedback({
         </button>
       </div>
       {total > 0 && (
-        <p className="mt-2 text-xs text-gray-400">
-          {helpfulCount} of {total} found this helpful
-        </p>
+        <div className="mt-3">
+          <p className="text-sm text-gray-600">
+            {Math.round((helpfulCount / total) * 100)}% found this helpful
+            <span className="ml-1 text-xs text-gray-400">
+              ({total} {total === 1 ? "vote" : "votes"})
+            </span>
+          </p>
+          <div className="mt-1 h-1.5 w-32 overflow-hidden rounded-full bg-gray-200">
+            <div
+              className="h-full rounded-full bg-green-500"
+              style={{
+                width: `${Math.round((helpfulCount / total) * 100)}%`,
+              }}
+            />
+          </div>
+        </div>
       )}
     </div>
   );

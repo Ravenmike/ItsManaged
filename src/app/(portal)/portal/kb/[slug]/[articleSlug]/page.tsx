@@ -1,7 +1,49 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { ArticleFeedback } from "@/components/kb/article-feedback";
+import { stripHtml, truncate } from "@/lib/utils";
+
+type Props = {
+  params: Promise<{ slug: string; articleSlug: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug, articleSlug } = await params;
+
+  const workspace = await db.workspace.findFirst();
+  if (!workspace) return { title: "Help Center" };
+
+  const category = await db.kbCategory.findUnique({
+    where: { workspaceId_slug: { workspaceId: workspace.id, slug } },
+  });
+  if (!category) return { title: "Help Center" };
+
+  const article = await db.kbArticle.findFirst({
+    where: {
+      workspaceId: workspace.id,
+      slug: articleSlug,
+      categoryId: category.id,
+      status: "PUBLISHED",
+    },
+  });
+
+  if (!article) return { title: "Article Not Found" };
+
+  const description = truncate(stripHtml(article.bodyHtml), 160);
+
+  return {
+    title: `${article.title} | ${workspace.name} Help Center`,
+    description,
+    openGraph: {
+      title: article.title,
+      description,
+      type: "article",
+      modifiedTime: article.updatedAt.toISOString(),
+    },
+  };
+}
 
 export default async function ArticlePage({
   params,

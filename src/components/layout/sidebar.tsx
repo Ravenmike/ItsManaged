@@ -21,7 +21,7 @@ export function Sidebar({ agentName, agentRole }: SidebarProps) {
   const pathname = usePathname();
 
   return (
-    <aside className="flex w-64 flex-col border-r border-gray-200 bg-gray-50">
+    <aside className="flex h-full w-64 flex-col border-r border-gray-200 bg-gray-50">
       <div className="flex h-16 items-center border-b border-gray-200 px-6">
         <Link href="/dashboard" className="text-lg font-bold text-gray-900">
           ItsManaged

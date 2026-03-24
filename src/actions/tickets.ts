@@ -66,6 +66,8 @@ export async function createTicket(formData: FormData) {
       submitterEmail,
       subject,
       lookupToken: ticket.lookupToken,
+      workspaceName: workspace.name,
+      supportEmail: workspace.supportEmail,
     });
   } catch {
     // Don't fail ticket creation if email fails
@@ -107,6 +109,10 @@ export async function updateTicketStatus(ticketId: string, status: TicketStatus)
     },
   });
 
+  const workspace = await db.workspace.findUnique({
+    where: { id: ticket.workspaceId },
+  });
+
   try {
     await sendTicketStatusUpdate(
       {
@@ -114,6 +120,8 @@ export async function updateTicketStatus(ticketId: string, status: TicketStatus)
         submitterEmail: ticket.submitterEmail,
         subject: ticket.subject,
         lookupToken: ticket.lookupToken,
+        workspaceName: workspace?.name ?? "Support",
+        supportEmail: workspace?.supportEmail ?? "support@earnyourears.app",
       },
       TICKET_STATUS_LABELS[status],
     );
