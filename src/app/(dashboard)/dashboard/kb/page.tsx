@@ -37,7 +37,7 @@ export default async function KbManagementPage() {
         {articles.length} articles across {categories.length} categories
       </p>
 
-      <div className="mt-6 overflow-hidden rounded-lg border border-gray-200 bg-white">
+      <div className="mt-6 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
         {articles.length === 0 ? (
           <div className="p-8 text-center text-gray-500">
             No articles yet. Create your first article to get started.
@@ -69,7 +69,7 @@ export default async function KbManagementPage() {
                   <td className="px-4 py-3">
                     <Link
                       href={`/dashboard/kb/${article.id}`}
-                      className="font-medium text-gray-900 hover:text-blue-600"
+                      className="font-medium text-gray-900 hover:text-brand-600"
                     >
                       {article.title}
                     </Link>

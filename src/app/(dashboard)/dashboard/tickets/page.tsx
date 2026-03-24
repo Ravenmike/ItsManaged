@@ -57,7 +57,7 @@ export default async function TicketsPage({
         currentCategory={params.category}
       />
 
-      <div className="mt-4 overflow-hidden rounded-lg border border-gray-200 bg-white">
+      <div className="mt-4 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
         {tickets.length === 0 ? (
           <div className="p-8 text-center text-gray-500">
             No tickets found.
@@ -92,7 +92,7 @@ export default async function TicketsPage({
                   <td className="px-4 py-3">
                     <Link
                       href={`/dashboard/tickets/${ticket.id}`}
-                      className="font-medium text-gray-900 hover:text-blue-600"
+                      className="font-medium text-gray-900 hover:text-brand-600"
                     >
                       {ticket.subject}
                     </Link>

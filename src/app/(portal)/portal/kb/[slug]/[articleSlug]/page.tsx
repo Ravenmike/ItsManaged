@@ -72,10 +72,10 @@ export default async function ArticlePage({
   if (!article) notFound();
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
+    <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
       <Link
         href={`/portal/kb/${slug}`}
-        className="text-sm text-blue-600 hover:underline"
+        className="text-sm text-brand-600 hover:underline"
       >
         &larr; {category.name}
       </Link>

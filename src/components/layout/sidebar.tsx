@@ -21,9 +21,9 @@ export function Sidebar({ agentName, agentRole }: SidebarProps) {
   const pathname = usePathname();
 
   return (
-    <aside className="flex h-full w-64 flex-col border-r border-gray-200 bg-gray-50">
-      <div className="flex h-16 items-center border-b border-gray-200 px-6">
-        <Link href="/dashboard" className="text-lg font-bold text-gray-900">
+    <aside className="flex h-full w-64 flex-col bg-brand-900">
+      <div className="flex h-16 items-center px-6">
+        <Link href="/dashboard" className="text-lg font-bold text-white">
           ItsManaged
         </Link>
       </div>
@@ -38,10 +38,10 @@ export function Sidebar({ agentName, agentRole }: SidebarProps) {
             <Link
               key={item.name}
               href={item.href}
-              className={`block rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+              className={`block rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                 isActive
-                  ? "bg-blue-50 text-blue-700"
-                  : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                  ? "bg-white/15 text-white"
+                  : "text-brand-200 hover:bg-white/10 hover:text-white"
               }`}
             >
               {item.name}
@@ -50,9 +50,9 @@ export function Sidebar({ agentName, agentRole }: SidebarProps) {
         })}
       </nav>
 
-      <div className="border-t border-gray-200 p-4">
-        <p className="text-sm font-medium text-gray-900">{agentName}</p>
-        <p className="text-xs text-gray-500 capitalize">
+      <div className="border-t border-white/10 p-4">
+        <p className="text-sm font-medium text-white">{agentName}</p>
+        <p className="text-xs text-brand-200 capitalize">
           {agentRole.toLowerCase()}
         </p>
       </div>

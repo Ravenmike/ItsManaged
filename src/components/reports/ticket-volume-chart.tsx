@@ -34,7 +34,7 @@ export function TicketVolumeChart({ data }: TicketVolumeChartProps) {
         />
         <YAxis allowDecimals={false} tick={{ fontSize: 12 }} />
         <Tooltip />
-        <Bar dataKey="count" name="Tickets" fill="#2563eb" radius={[4, 4, 0, 0]} />
+        <Bar dataKey="count" name="Tickets" fill="#4f46e5" radius={[4, 4, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
   );

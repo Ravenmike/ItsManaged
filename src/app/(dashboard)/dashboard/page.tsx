@@ -24,16 +24,16 @@ export default async function DashboardHome() {
   ]);
 
   const stats = [
-    { label: "Open Tickets", value: openCount },
-    { label: "Awaiting Response", value: waitingCount },
-    { label: "Resolved Today", value: resolvedToday },
-    { label: "KB Articles", value: kbCount },
+    { label: "Open Tickets", value: openCount, color: "text-brand-600", bg: "bg-brand-50" },
+    { label: "Awaiting Response", value: waitingCount, color: "text-amber-600", bg: "bg-amber-50" },
+    { label: "Resolved Today", value: resolvedToday, color: "text-emerald-600", bg: "bg-emerald-50" },
+    { label: "KB Articles", value: kbCount, color: "text-sky-600", bg: "bg-sky-50" },
   ];
 
   return (
     <div>
       <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-      <p className="mt-2 text-gray-600">
+      <p className="mt-2 text-gray-500">
         Welcome back, {session.user.name}. Here&apos;s your support overview.
       </p>
 
@@ -41,10 +41,10 @@ export default async function DashboardHome() {
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="rounded-lg border border-gray-200 bg-white p-6"
+            className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
           >
             <p className="text-sm font-medium text-gray-500">{stat.label}</p>
-            <p className="mt-2 text-3xl font-bold text-gray-900">
+            <p className={`mt-2 text-3xl font-bold ${stat.color}`}>
               {stat.value}
             </p>
           </div>

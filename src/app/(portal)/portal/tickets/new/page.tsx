@@ -47,14 +47,14 @@ export default function NewTicketPage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
+    <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
       <h1 className="text-2xl font-bold text-gray-900">Submit a Request</h1>
-      <p className="mt-2 text-gray-600">
+      <p className="mt-2 text-gray-500">
         Fill out the form below and we&apos;ll get back to you as soon as
         possible.
       </p>
 
-      <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+      <form onSubmit={handleSubmit} className="mt-8 space-y-5 rounded-xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
         <div className="grid gap-5 sm:grid-cols-2">
           <Input
             id="name"

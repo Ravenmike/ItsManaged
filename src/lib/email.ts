@@ -37,13 +37,13 @@ export async function sendTicketConfirmation(ticket: TicketEmailData) {
         </div>
         <p>Our team will review your request and get back to you as soon as possible.</p>
         <p>
-          <a href="${trackingUrl}" style="display: inline-block; background: #2563eb; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 500;">
+          <a href="${trackingUrl}" style="display: inline-block; background: #4f46e5; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 500;">
             View Your Request
           </a>
         </p>
         <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">
           You can check the status of your request anytime at:<br/>
-          <a href="${trackingUrl}" style="color: #2563eb;">${trackingUrl}</a>
+          <a href="${trackingUrl}" style="color: #4f46e5;">${trackingUrl}</a>
         </p>
       </div>
     `,
@@ -66,9 +66,9 @@ export async function sendAgentReplyNotification(ticket: TicketEmailData, replyB
         <div style="background: #f3f4f6; border-radius: 8px; padding: 16px; margin: 16px 0;">
           <strong>${ticket.subject}</strong>
         </div>
-        <div style="border-left: 3px solid #2563eb; padding-left: 16px; margin: 16px 0; white-space: pre-wrap;">${replyBody}</div>
+        <div style="border-left: 3px solid #4f46e5; padding-left: 16px; margin: 16px 0; white-space: pre-wrap;">${replyBody}</div>
         <p>
-          <a href="${trackingUrl}" style="display: inline-block; background: #2563eb; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 500;">
+          <a href="${trackingUrl}" style="display: inline-block; background: #4f46e5; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 500;">
             View Full Conversation
           </a>
         </p>
@@ -92,10 +92,10 @@ export async function sendTicketStatusUpdate(ticket: TicketEmailData, newStatus:
         <p>The status of your support request has been updated:</p>
         <div style="background: #f3f4f6; border-radius: 8px; padding: 16px; margin: 16px 0;">
           <strong>${ticket.subject}</strong><br/>
-          <span style="color: #2563eb; font-weight: 500;">Status: ${newStatus}</span>
+          <span style="color: #4f46e5; font-weight: 500;">Status: ${newStatus}</span>
         </div>
         <p>
-          <a href="${trackingUrl}" style="display: inline-block; background: #2563eb; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 500;">
+          <a href="${trackingUrl}" style="display: inline-block; background: #4f46e5; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 500;">
             View Your Request
           </a>
         </p>

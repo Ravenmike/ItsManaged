@@ -18,7 +18,7 @@ export default async function SettingsPage() {
         Manage your workspace configuration.
       </p>
 
-      <div className="mt-6 max-w-lg rounded-lg border border-gray-200 bg-white p-6">
+      <div className="mt-6 max-w-lg rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         <SettingsForm
           workspace={{
             name: workspace.name,

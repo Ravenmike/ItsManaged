@@ -40,9 +40,9 @@ export default async function KbLandingPage() {
             <Link
               key={cat.id}
               href={`/portal/kb/${cat.slug}`}
-              className="rounded-lg border border-gray-200 p-5 transition-shadow hover:shadow-md"
+              className="group rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
             >
-              <h2 className="font-semibold text-gray-900">{cat.name}</h2>
+              <h2 className="font-semibold text-gray-900 group-hover:text-brand-600">{cat.name}</h2>
               <p className="mt-1 text-sm text-gray-500">
                 {cat._count.articles} {cat._count.articles === 1 ? "article" : "articles"}
               </p>
