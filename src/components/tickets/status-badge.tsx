@@ -10,9 +10,9 @@ const statusVariants: Record<string, "default" | "success" | "warning" | "danger
   CLOSED: "default",
 };
 
-export function StatusBadge({ status }: { status: TicketStatus }) {
+export function StatusBadge({ status, variant = "light" }: { status: TicketStatus; variant?: "light" | "dark" }) {
   return (
-    <Badge variant={statusVariants[status] ?? "default"}>
+    <Badge variant={statusVariants[status] ?? "default"} theme={variant}>
       {TICKET_STATUS_LABELS[status] ?? status}
     </Badge>
   );

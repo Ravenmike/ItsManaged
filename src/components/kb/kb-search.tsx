@@ -37,19 +37,19 @@ export function KbSearch() {
         value={query}
         onChange={(e) => handleSearch(e.target.value)}
         placeholder="Search for help articles..."
-        className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base shadow-sm placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        className="w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-base text-white shadow-sm placeholder:text-white/40 focus:border-violet focus:outline-none focus:ring-1 focus:ring-violet backdrop-blur-sm"
       />
 
       {query.trim().length >= 2 && (
-        <div className="absolute z-10 mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-lg">
+        <div className="absolute z-10 mt-1 w-full rounded-xl border border-white/12 bg-navy-light shadow-2xl">
           {searching ? (
-            <div className="p-4 text-sm text-gray-500">Searching...</div>
+            <div className="p-4 text-sm text-white/50">Searching...</div>
           ) : results.length === 0 ? (
-            <div className="p-4 text-sm text-gray-500">
+            <div className="p-4 text-sm text-white/50">
               No articles found for &ldquo;{query}&rdquo;
             </div>
           ) : (
-            <ul className="divide-y divide-gray-100">
+            <ul className="divide-y divide-white/8">
               {results.map((article) => (
                 <li key={article.id}>
                   <Link
@@ -58,13 +58,13 @@ export function KbSearch() {
                         ? `/portal/kb/${article.category.slug}/${article.slug}`
                         : `/portal/kb`
                     }
-                    className="block px-4 py-3 hover:bg-gray-50"
+                    className="block px-4 py-3 transition-colors hover:bg-white/6"
                   >
-                    <p className="font-medium text-gray-900">
+                    <p className="font-medium text-white">
                       {article.title}
                     </p>
                     {article.category && (
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-white/50">
                         {article.category.name}
                       </p>
                     )}

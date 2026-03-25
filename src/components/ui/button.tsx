@@ -7,6 +7,10 @@ const variants = {
     "bg-white text-gray-700 border border-gray-300 shadow-sm hover:bg-gray-50 focus-visible:ring-brand-500",
   danger: "bg-red-600 text-white shadow-sm hover:bg-red-700 focus-visible:ring-red-500",
   ghost: "text-gray-700 hover:bg-gray-100 focus-visible:ring-brand-500",
+  portal:
+    "bg-gradient-to-r from-violet to-violet-light text-white font-bold shadow-sm hover:opacity-90 focus-visible:ring-violet",
+  "portal-secondary":
+    "border border-white/12 text-white/65 hover:border-violet/50 hover:text-white focus-visible:ring-violet",
 } as const;
 
 const sizes = {
@@ -25,7 +29,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
-        className={`inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${variants[variant]} ${sizes[size]} ${className}`}
+        className={`inline-flex items-center justify-center rounded-lg font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${variants[variant]} ${sizes[size]} ${className}`}
         {...props}
       />
     );

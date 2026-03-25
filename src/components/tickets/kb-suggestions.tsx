@@ -38,8 +38,8 @@ export function KbSuggestionsDisplay({ suggestions }: { suggestions: Suggestion[
   if (suggestions.length === 0) return null;
 
   return (
-    <div className="rounded-md border border-blue-200 bg-blue-50 p-4">
-      <p className="text-sm font-medium text-blue-800">
+    <div className="rounded-xl border border-violet/30 bg-violet/10 p-4">
+      <p className="text-sm font-medium text-violet-light">
         These articles might help:
       </p>
       <ul className="mt-2 space-y-1">
@@ -52,7 +52,7 @@ export function KbSuggestionsDisplay({ suggestions }: { suggestions: Suggestion[
                   : "/portal/kb"
               }
               target="_blank"
-              className="text-sm text-blue-600 hover:underline"
+              className="text-sm text-gold-light hover:underline"
             >
               {article.title}
             </Link>

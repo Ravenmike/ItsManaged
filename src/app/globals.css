@@ -1,8 +1,11 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
 @theme inline {
-  --font-sans: var(--font-geist-sans);
+  --font-sans: 'Inter', system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
+
+  /* EYE-matched brand palette */
   --color-brand-50: #eef2ff;
   --color-brand-100: #e0e7ff;
   --color-brand-200: #c7d2fe;
@@ -11,4 +14,13 @@
   --color-brand-700: #4338ca;
   --color-brand-800: #3730a3;
   --color-brand-900: #312e81;
+
+  /* EYE dark theme colors */
+  --color-navy: #0D0C1E;
+  --color-navy-light: #1a1a2e;
+  --color-violet: #6C5CE7;
+  --color-violet-light: #8B7CF6;
+  --color-purple: #4535B8;
+  --color-gold: #C9A227;
+  --color-gold-light: #FFD166;
 }

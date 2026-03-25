@@ -75,14 +75,14 @@ export default async function ArticlePage({
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
       <Link
         href={`/portal/kb/${slug}`}
-        className="text-sm text-brand-600 hover:underline"
+        className="text-sm text-violet-light hover:underline"
       >
         &larr; {category.name}
       </Link>
 
       <article className="mt-4">
-        <h1 className="text-2xl font-bold text-gray-900">{article.title}</h1>
-        <p className="mt-2 text-sm text-gray-500">
+        <h1 className="text-2xl font-bold text-white">{article.title}</h1>
+        <p className="mt-2 text-sm text-white/50">
           Last updated{" "}
           {article.updatedAt.toLocaleDateString("en-US", {
             month: "long",
@@ -92,12 +92,12 @@ export default async function ArticlePage({
         </p>
 
         <div
-          className="prose prose-sm mt-6 max-w-none"
+          className="prose prose-sm prose-invert mt-6 max-w-none prose-headings:text-white prose-p:text-white/80 prose-a:text-violet-light prose-strong:text-white prose-code:text-gold-light"
           dangerouslySetInnerHTML={{ __html: article.bodyHtml }}
         />
       </article>
 
-      <div className="mt-10 border-t border-gray-200 pt-6">
+      <div className="mt-10 border-t border-white/12 pt-6">
         <ArticleFeedback
           articleId={article.id}
           helpfulCount={article.helpfulCount}

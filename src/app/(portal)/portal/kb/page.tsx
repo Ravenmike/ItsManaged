@@ -22,11 +22,14 @@ export default async function KbLandingPage() {
   const activeCategories = categories.filter((c) => c._count.articles > 0);
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
-      <h1 className="text-3xl font-bold tracking-tight text-gray-900 text-center">
+    <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
+      <p className="text-center text-xs font-bold uppercase tracking-widest text-gold-light">
+        Knowledge Base
+      </p>
+      <h1 className="mt-2 text-center text-3xl font-bold tracking-tight text-white">
         Help Center
       </h1>
-      <p className="mt-2 text-center text-gray-600">
+      <p className="mt-2 text-center text-white/65">
         Find answers to common questions
       </p>
 
@@ -40,17 +43,20 @@ export default async function KbLandingPage() {
             <Link
               key={cat.id}
               href={`/portal/kb/${cat.slug}`}
-              className="group rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+              className="group rounded-2xl border border-white/12 bg-white/6 p-5 transition-all hover:-translate-y-1 hover:border-violet/50"
             >
-              <h2 className="font-semibold text-gray-900 group-hover:text-brand-600">{cat.name}</h2>
-              <p className="mt-1 text-sm text-gray-500">
-                {cat._count.articles} {cat._count.articles === 1 ? "article" : "articles"}
+              <h2 className="font-semibold text-white group-hover:text-violet-light">
+                {cat.name}
+              </h2>
+              <p className="mt-1 text-sm text-white/50">
+                {cat._count.articles}{" "}
+                {cat._count.articles === 1 ? "article" : "articles"}
               </p>
             </Link>
           ))}
         </div>
       ) : (
-        <div className="mt-10 text-center text-gray-500">
+        <div className="mt-10 text-center text-white/50">
           No articles published yet. Check back soon!
         </div>
       )}

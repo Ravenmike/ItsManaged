@@ -37,27 +37,27 @@ export default async function CategoryPage({
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
       <Link
         href="/portal/kb"
-        className="text-sm text-blue-600 hover:underline"
+        className="text-sm text-violet-light hover:underline"
       >
         &larr; Back to Help Center
       </Link>
 
-      <h1 className="mt-4 text-2xl font-bold text-gray-900">
+      <h1 className="mt-4 text-2xl font-bold text-white">
         {category.name}
       </h1>
 
       {articles.length === 0 ? (
-        <p className="mt-6 text-gray-500">No articles in this category yet.</p>
+        <p className="mt-6 text-white/50">No articles in this category yet.</p>
       ) : (
         <div className="mt-6 space-y-3">
           {articles.map((article) => (
             <Link
               key={article.id}
               href={`/portal/kb/${slug}/${article.slug}`}
-              className="block rounded-lg border border-gray-200 p-4 transition-shadow hover:shadow-md"
+              className="block rounded-xl border border-white/12 bg-white/6 p-4 transition-all hover:border-violet/50"
             >
-              <h2 className="font-medium text-gray-900">{article.title}</h2>
-              <p className="mt-1 text-sm text-gray-500">
+              <h2 className="font-medium text-white">{article.title}</h2>
+              <p className="mt-1 text-sm text-white/50">
                 Updated{" "}
                 {article.updatedAt.toLocaleDateString("en-US", {
                   month: "long",

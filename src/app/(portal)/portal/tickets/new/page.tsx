@@ -48,13 +48,13 @@ export default function NewTicketPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
-      <h1 className="text-2xl font-bold text-gray-900">Submit a Request</h1>
-      <p className="mt-2 text-gray-500">
+      <h1 className="text-2xl font-bold text-white">Submit a Request</h1>
+      <p className="mt-2 text-white/65">
         Fill out the form below and we&apos;ll get back to you as soon as
         possible.
       </p>
 
-      <form onSubmit={handleSubmit} className="mt-8 space-y-5 rounded-xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
+      <form onSubmit={handleSubmit} className="mt-8 space-y-5 rounded-2xl border border-white/12 bg-white/6 p-6 sm:p-8">
         <div className="grid gap-5 sm:grid-cols-2">
           <Input
             id="name"
@@ -62,6 +62,7 @@ export default function NewTicketPage() {
             label="Your Name"
             placeholder="Jane Doe"
             required
+            variant="dark"
           />
           <Input
             id="email"
@@ -70,6 +71,7 @@ export default function NewTicketPage() {
             label="Email Address"
             placeholder="jane@example.com"
             required
+            variant="dark"
           />
         </div>
 
@@ -80,6 +82,7 @@ export default function NewTicketPage() {
           placeholder="Select a category..."
           options={categoryOptions}
           defaultValue=""
+          variant="dark"
         />
 
         <Input
@@ -88,6 +91,7 @@ export default function NewTicketPage() {
           label="Subject"
           placeholder="Brief description of your issue"
           required
+          variant="dark"
         />
 
         <Textarea
@@ -102,19 +106,20 @@ export default function NewTicketPage() {
             setDescription(e.target.value);
             handleQueryChange(e.target.value);
           }}
+          variant="dark"
         />
 
         <KbSuggestionsDisplay suggestions={suggestions} />
 
-        <FileUpload onFilesUploaded={setAttachments} />
+        <FileUpload onFilesUploaded={setAttachments} variant="dark" />
 
         {error && (
-          <div className="rounded-md bg-red-50 p-3 text-sm text-red-700">
+          <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
             {error}
           </div>
         )}
 
-        <Button type="submit" disabled={submitting} className="w-full sm:w-auto">
+        <Button type="submit" disabled={submitting} variant="portal">
           {submitting ? "Submitting..." : "Submit Request"}
         </Button>
       </form>

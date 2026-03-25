@@ -29,8 +29,8 @@ export default async function PublicTicketPage({
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold text-gray-900">{ticket.subject}</h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <h1 className="text-xl font-bold text-white">{ticket.subject}</h1>
+          <p className="mt-1 text-sm text-white/50">
             Submitted on{" "}
             {ticket.createdAt.toLocaleDateString("en-US", {
               year: "numeric",
@@ -39,30 +39,30 @@ export default async function PublicTicketPage({
             })}
           </p>
         </div>
-        <StatusBadge status={ticket.status} />
+        <StatusBadge status={ticket.status} variant="dark" />
       </div>
 
       <div className="mt-8 space-y-4">
         {ticket.messages.map((message) => (
           <div
             key={message.id}
-            className={`rounded-lg border p-4 ${
+            className={`rounded-xl border p-4 ${
               message.senderType === "USER"
-                ? "border-gray-200 bg-white"
+                ? "border-white/12 bg-white/6"
                 : message.senderType === "AGENT"
-                  ? "border-blue-200 bg-blue-50"
-                  : "border-gray-100 bg-gray-50"
+                  ? "border-violet/30 bg-violet/10"
+                  : "border-white/8 bg-white/4"
             }`}
           >
             <div className="flex items-center justify-between text-sm">
-              <span className="font-medium text-gray-900">
+              <span className="font-medium text-white">
                 {message.senderType === "USER"
                   ? ticket.submitterName
                   : message.senderType === "AGENT"
                     ? "Support Team"
                     : "System"}
               </span>
-              <span className="text-gray-500">
+              <span className="text-white/50">
                 {message.createdAt.toLocaleString("en-US", {
                   month: "short",
                   day: "numeric",
@@ -71,7 +71,7 @@ export default async function PublicTicketPage({
                 })}
               </span>
             </div>
-            <p className="mt-2 whitespace-pre-wrap text-sm text-gray-700">
+            <p className="mt-2 whitespace-pre-wrap text-sm text-white/75">
               {message.body}
             </p>
             {message.attachments.length > 0 && (
@@ -82,7 +82,7 @@ export default async function PublicTicketPage({
                     href={att.fileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block text-sm text-blue-600 hover:underline"
+                    className="block text-sm text-violet-light hover:underline"
                   >
                     {att.fileName}
                   </a>
@@ -95,7 +95,7 @@ export default async function PublicTicketPage({
 
       {!isClosed && (
         <div className="mt-8">
-          <CustomerReplyForm lookupToken={token} />
+          <CustomerReplyForm lookupToken={token} variant="dark" />
         </div>
       )}
     </div>

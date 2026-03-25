@@ -6,10 +6,11 @@ import { addCustomerReply } from "@/actions/messages";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
-export function CustomerReplyForm({ lookupToken }: { lookupToken: string }) {
+export function CustomerReplyForm({ lookupToken, variant = "light" }: { lookupToken: string; variant?: "light" | "dark" }) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const isDark = variant === "dark";
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -41,9 +42,10 @@ export function CustomerReplyForm({ lookupToken }: { lookupToken: string }) {
         placeholder="Type your message..."
         rows={3}
         required
+        variant={isDark ? "dark" : "light"}
       />
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      <Button type="submit" disabled={submitting}>
+      {error && <p className={`text-sm ${isDark ? "text-red-400" : "text-red-600"}`}>{error}</p>}
+      <Button type="submit" disabled={submitting} variant={isDark ? "portal" : "primary"}>
         {submitting ? "Sending..." : "Send Reply"}
       </Button>
     </form>
