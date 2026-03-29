@@ -3,7 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { ArticleFeedback } from "@/components/kb/article-feedback";
-import { stripHtml, truncate, sanitizeArticleHtml } from "@/lib/utils";
+import { ArticleRenderer } from "@/components/kb/article-renderer";
+import { stripHtml, truncate } from "@/lib/utils";
 
 type Props = {
   params: Promise<{ slug: string; articleSlug: string }>;
@@ -45,6 +46,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+// Detect if HTML content is rich (has its own styling/structure)
+function isRichHtml(html: string): boolean {
+  return /<style[\s>]/i.test(html) ||
+    /<div\s+class=/i.test(html) ||
+    /<!DOCTYPE/i.test(html);
+}
+
 export default async function ArticlePage({
   params,
 }: {
@@ -71,6 +79,8 @@ export default async function ArticlePage({
 
   if (!article) notFound();
 
+  const richContent = isRichHtml(article.bodyHtml);
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
       <Link
@@ -91,10 +101,16 @@ export default async function ArticlePage({
           })}
         </p>
 
-        <div
-          className="kb-article-content prose prose-sm prose-invert mt-6 max-w-none prose-headings:text-white prose-p:text-white/80 prose-a:text-violet-light prose-strong:text-white prose-code:text-gold-light"
-          dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(article.bodyHtml) }}
-        />
+        {richContent ? (
+          <div className="mt-6">
+            <ArticleRenderer html={article.bodyHtml} />
+          </div>
+        ) : (
+          <div
+            className="prose prose-sm prose-invert mt-6 max-w-none prose-headings:text-white prose-p:text-white/80 prose-a:text-violet-light prose-strong:text-white prose-code:text-gold-light"
+            dangerouslySetInnerHTML={{ __html: article.bodyHtml }}
+          />
+        )}
       </article>
 
       <div className="mt-10 border-t border-white/12 pt-6">
