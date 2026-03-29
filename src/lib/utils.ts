@@ -9,8 +9,8 @@ export function truncate(text: string, maxLength: number): string {
 
 /**
  * Sanitize pasted HTML for KB article display.
- * Strips <html>, <head>, <body>, <!DOCTYPE>, and <style> tags,
- * extracting only the inner body content.
+ * Strips document-level tags but preserves inline styles,
+ * only overriding color properties via CSS.
  */
 export function sanitizeArticleHtml(html: string): string {
   let content = html;
@@ -33,8 +33,26 @@ export function sanitizeArticleHtml(html: string): string {
   // Remove <body> tags but keep content
   content = content.replace(/<\/?body[^>]*>/gi, "");
 
-  // Remove inline style attributes that set light backgrounds or dark text
-  content = content.replace(/\s*style="[^"]*"/gi, "");
+  // Strip only color-related inline style properties, keep layout properties
+  // This preserves padding, margin, border-radius, display, text-align, etc.
+  content = content.replace(/style="([^"]*)"/gi, (_match, styles: string) => {
+    const cleaned = styles
+      .split(";")
+      .map((s: string) => s.trim())
+      .filter((s: string) => {
+        if (!s) return false;
+        const prop = s.split(":")[0]?.trim().toLowerCase() ?? "";
+        // Remove color-related properties
+        const colorProps = [
+          "color", "background", "background-color",
+          "border-color", "border-left-color", "border-right-color",
+          "border-top-color", "border-bottom-color",
+        ];
+        return !colorProps.includes(prop);
+      })
+      .join("; ");
+    return cleaned ? `style="${cleaned}"` : "";
+  });
 
   return content.trim();
 }
