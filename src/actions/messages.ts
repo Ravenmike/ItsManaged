@@ -2,7 +2,7 @@
 
 import { db } from "@/lib/db";
 import { requireAuth } from "@/lib/auth-guard";
-import { sendAgentReplyNotification } from "@/lib/email";
+import { sendAgentReplyNotification, sendAgentNotification } from "@/lib/email";
 import { revalidatePath } from "next/cache";
 
 export async function addAgentReply(ticketId: string, body: string, isInternalNote: boolean = false) {
@@ -92,6 +92,29 @@ export async function addCustomerReply(lookupToken: string, body: string) {
       where: { id: ticket.id },
       data: { status: "OPEN" },
     });
+  }
+
+  // Notify assigned agent (or all workspace agents if unassigned)
+  try {
+    const workspace = await db.workspace.findUnique({
+      where: { id: ticket.workspaceId },
+    });
+
+    const agents = ticket.assignedAgentId
+      ? await db.agent.findMany({ where: { id: ticket.assignedAgentId } })
+      : await db.agent.findMany({ where: { workspaceId: ticket.workspaceId } });
+
+    for (const agent of agents) {
+      await sendAgentNotification(
+        agent.email,
+        { subject: ticket.subject, submitterName: ticket.submitterName, submitterEmail: ticket.submitterEmail, id: ticket.id },
+        body.trim(),
+        workspace?.name ?? "Support",
+        workspace?.supportEmail ?? "support@earnyourears.app",
+      );
+    }
+  } catch {
+    console.error("Failed to send agent notification email");
   }
 
   revalidatePath(`/portal/tickets/${lookupToken}`);

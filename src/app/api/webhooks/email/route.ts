@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { sendAgentNotification } from "@/lib/email";
 
 // Resend inbound email webhook handler
 // Payload format: { type: "email.received", data: { from, subject, to, text, html, ... } }
@@ -76,6 +77,25 @@ export async function POST(request: NextRequest) {
           data: { status: "OPEN" },
         });
       }
+
+      // Notify agents
+      try {
+        const agents = ticket.assignedAgentId
+          ? await db.agent.findMany({ where: { id: ticket.assignedAgentId } })
+          : await db.agent.findMany({ where: { workspaceId: workspace.id } });
+
+        for (const agent of agents) {
+          await sendAgentNotification(
+            agent.email,
+            { subject: ticket.subject, submitterName: ticket.submitterName, submitterEmail: ticket.submitterEmail, id: ticket.id },
+            body,
+            workspace.name,
+            workspace.supportEmail,
+          );
+        }
+      } catch {
+        console.error("Failed to send agent notification for inbound email reply");
+      }
     } else {
       // Create new ticket from email
       const cleanSubject = subject
@@ -83,7 +103,7 @@ export async function POST(request: NextRequest) {
         .replace(/\[#[a-z0-9]+\]/gi, "")
         .trim() || "Email inquiry";
 
-      await db.ticket.create({
+      const newTicket = await db.ticket.create({
         data: {
           workspaceId: workspace.id,
           subject: cleanSubject,
@@ -97,6 +117,23 @@ export async function POST(request: NextRequest) {
           },
         },
       });
+
+      // Notify all agents of new ticket
+      try {
+        const agents = await db.agent.findMany({ where: { workspaceId: workspace.id } });
+
+        for (const agent of agents) {
+          await sendAgentNotification(
+            agent.email,
+            { subject: cleanSubject, submitterName: senderName, submitterEmail: cleanEmail, id: newTicket.id },
+            body,
+            workspace.name,
+            workspace.supportEmail,
+          );
+        }
+      } catch {
+        console.error("Failed to send agent notification for new inbound ticket");
+      }
     }
 
     return NextResponse.json({ success: true });

@@ -1,6 +1,12 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let _resend: Resend | null = null;
+function getResend() {
+  if (!_resend) {
+    _resend = new Resend(process.env.RESEND_API_KEY);
+  }
+  return _resend;
+}
 
 interface TicketEmailData {
   submitterName: string;
@@ -22,7 +28,7 @@ function getFromEmail(data: TicketEmailData) {
 export async function sendTicketConfirmation(ticket: TicketEmailData) {
   const trackingUrl = `${getBaseUrl()}/portal/tickets/${ticket.lookupToken}`;
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: getFromEmail(ticket),
     to: ticket.submitterEmail,
     replyTo: ticket.supportEmail,
@@ -53,7 +59,7 @@ export async function sendTicketConfirmation(ticket: TicketEmailData) {
 export async function sendAgentReplyNotification(ticket: TicketEmailData, replyBody: string) {
   const trackingUrl = `${getBaseUrl()}/portal/tickets/${ticket.lookupToken}`;
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: getFromEmail(ticket),
     to: ticket.submitterEmail,
     replyTo: ticket.supportEmail,
@@ -77,10 +83,41 @@ export async function sendAgentReplyNotification(ticket: TicketEmailData, replyB
   });
 }
 
+export async function sendAgentNotification(
+  agentEmail: string,
+  ticket: { subject: string; submitterName: string; submitterEmail: string; id: string },
+  replyBody: string,
+  workspaceName: string,
+  supportEmail: string,
+) {
+  const ticketUrl = `${getBaseUrl()}/dashboard/tickets/${ticket.id}`;
+
+  await getResend().emails.send({
+    from: `${workspaceName} <${supportEmail}>`,
+    to: agentEmail,
+    subject: `New reply from ${ticket.submitterName}: ${ticket.subject}`,
+    html: `
+      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #1f2937;">Customer replied to a ticket</h2>
+        <p><strong>${ticket.submitterName}</strong> (${ticket.submitterEmail}) replied to:</p>
+        <div style="background: #f3f4f6; border-radius: 8px; padding: 16px; margin: 16px 0;">
+          <strong>${ticket.subject}</strong>
+        </div>
+        <div style="border-left: 3px solid #6C5CE7; padding-left: 16px; margin: 16px 0; white-space: pre-wrap; color: #374151;">${replyBody}</div>
+        <p>
+          <a href="${ticketUrl}" style="display: inline-block; background: #4f46e5; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 500;">
+            View Ticket in Dashboard
+          </a>
+        </p>
+      </div>
+    `,
+  });
+}
+
 export async function sendTicketStatusUpdate(ticket: TicketEmailData, newStatus: string) {
   const trackingUrl = `${getBaseUrl()}/portal/tickets/${ticket.lookupToken}`;
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: getFromEmail(ticket),
     to: ticket.submitterEmail,
     replyTo: ticket.supportEmail,
