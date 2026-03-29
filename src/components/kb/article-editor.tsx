@@ -33,6 +33,7 @@ export function ArticleEditor({ article, categories }: ArticleEditorProps) {
   const [slug, setSlug] = useState(article?.slug || "");
   const [bodyHtml, setBodyHtml] = useState(article?.bodyHtml || "");
   const [categoryId, setCategoryId] = useState(article?.categoryId || "");
+  const [editorMode, setEditorMode] = useState<"visual" | "html">("visual");
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -125,10 +126,46 @@ export function ArticleEditor({ article, categories }: ArticleEditorProps) {
       />
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Content
-        </label>
-        <TipTapEditor content={bodyHtml} onChange={setBodyHtml} />
+        <div className="flex items-center justify-between mb-1">
+          <label className="block text-sm font-medium text-gray-700">
+            Content
+          </label>
+          <div className="flex rounded-lg border border-gray-300 bg-gray-50 p-0.5">
+            <button
+              type="button"
+              onClick={() => setEditorMode("visual")}
+              className={`rounded-md px-3 py-1 text-xs font-medium transition-colors ${
+                editorMode === "visual"
+                  ? "bg-white text-gray-900 shadow-sm"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              Visual
+            </button>
+            <button
+              type="button"
+              onClick={() => setEditorMode("html")}
+              className={`rounded-md px-3 py-1 text-xs font-medium transition-colors ${
+                editorMode === "html"
+                  ? "bg-white text-gray-900 shadow-sm"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              HTML
+            </button>
+          </div>
+        </div>
+        {editorMode === "visual" ? (
+          <TipTapEditor content={bodyHtml} onChange={setBodyHtml} />
+        ) : (
+          <textarea
+            value={bodyHtml}
+            onChange={(e) => setBodyHtml(e.target.value)}
+            className="block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 font-mono text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            rows={20}
+            placeholder="Paste or write HTML here..."
+          />
+        )}
       </div>
 
       {error && (
