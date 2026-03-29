@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { ArticleFeedback } from "@/components/kb/article-feedback";
-import { stripHtml, truncate } from "@/lib/utils";
+import { stripHtml, truncate, sanitizeArticleHtml } from "@/lib/utils";
 
 type Props = {
   params: Promise<{ slug: string; articleSlug: string }>;
@@ -92,8 +92,8 @@ export default async function ArticlePage({
         </p>
 
         <div
-          className="prose prose-sm prose-invert mt-6 max-w-none prose-headings:text-white prose-p:text-white/80 prose-a:text-violet-light prose-strong:text-white prose-code:text-gold-light"
-          dangerouslySetInnerHTML={{ __html: article.bodyHtml }}
+          className="kb-article-content prose prose-sm prose-invert mt-6 max-w-none prose-headings:text-white prose-p:text-white/80 prose-a:text-violet-light prose-strong:text-white prose-code:text-gold-light"
+          dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(article.bodyHtml) }}
         />
       </article>
 
